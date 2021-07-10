@@ -27,7 +27,7 @@ public class Saying{
         this.saying = saying;
     }
 
-    public Saying(SayingRequestDto requestDto, Long num){
+    public Saying(SayingRequestDto requestDto){
         this.saying = requestDto.getSaying();
         this.num = requestDto.getNum();
     }
