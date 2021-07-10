@@ -24,9 +24,6 @@ public class User extends Timestamped {
     private String password;
 
     @Column(nullable = false)
-    private String email;
-
-    @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRole role;
 

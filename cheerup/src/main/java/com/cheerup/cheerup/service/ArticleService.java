@@ -24,10 +24,9 @@ public class ArticleService {
         return article;
     }
 
-    @GetMapping("/api/article/{id}")
+    @GetMapping("/article/{id}")
     public Article getArticle(@PathVariable Long id) {
-        Article article =  articleRepository.findById(id).orElseThrow(
+        return articleRepository.findById(id).orElseThrow(
                 ()->new IllegalArgumentException(" "));
-        return article;
     }
 }
