@@ -1,12 +1,13 @@
 package com.cheerup.cheerup.model;
 
+import com.cheerup.cheerup.dto.ArticleRequestDto;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Getter
-@Setter
+@NoArgsConstructor // 기본 생성자를 만들어줍니다.
 @Entity
 public class Article extends Timestamped {
 
