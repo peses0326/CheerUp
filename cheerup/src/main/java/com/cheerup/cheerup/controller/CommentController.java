@@ -38,13 +38,13 @@ public class CommentController {
         return commentRepository.save(comment);
     }
 
-    @PutMapping("/api/comment/{id}")
+    @PutMapping("/comment/{id}")
     public Long updateText(@PathVariable Long id, @RequestBody CommentRequestDto requestDto) {
         commentService.update(id, requestDto);
         return id;
     }
 
-    @DeleteMapping("/api/comment/{id}")
+    @DeleteMapping("/comment/{id}")
     public Long deleteComment(@PathVariable Long id) {
         commentRepository.deleteById(id);
         return id;

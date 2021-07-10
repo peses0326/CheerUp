@@ -30,8 +30,6 @@ public class Comment extends Timestamped { // 생성,수정 시간을 자동으�
     }
 
     public void update(CommentRequestDto requestDto) {
-        this.articleId = requestDto.getArticleId();
-        this.username = requestDto.getUsername();
         this.comment = requestDto.getComment();
     }
 }
