@@ -3,7 +3,6 @@ package com.cheerup.cheerup.controller;
 import com.cheerup.cheerup.dto.ArticleRequestDto;
 import com.cheerup.cheerup.model.Article;
 import com.cheerup.cheerup.repository.ArticleRepository;
-import com.cheerup.cheerup.repository.CommentRepository;
 import com.cheerup.cheerup.security.UserDetailsImpl;
 import com.cheerup.cheerup.service.ArticleService;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +10,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -22,11 +20,12 @@ public class ArticleController {
     @GetMapping("/article")
     public List<Article> getArticle() {
         List<Article> articleList = articleRepository.findAllByOrderByCreatedAtDesc();
+        articleService.IpChecker(); // 방문자 체크 로직
         return articleService.commentsCounter(articleList);
     }
 
     @GetMapping("/article/{id}")
-    public Article getArticle(@PathVariable Long id){
+    public Article getArticle(@PathVariable Long id) {
         return articleRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당 아이디가 존재하지 않습니다.")
         );
@@ -35,7 +34,7 @@ public class ArticleController {
     @PostMapping("/article")
     public Article createArticle(@RequestBody ArticleRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         // 로그인 되어 있는 ID의 username
-        String username ="";
+        String username = "";
         if (userDetails != null) {
             username = userDetails.getUser().getUsername();
         }
