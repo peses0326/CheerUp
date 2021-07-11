@@ -24,6 +24,12 @@ public class Article extends Timestamped {
     @Column(nullable = false)
     private String saying;
 
+    @Transient
+    private Long commentsCount;
+
+    public void addCommentsCount(Long count) {
+        this.commentsCount = count;}
+
     public Article(String saying, String username, String content) {
         this.saying = saying;
         this.username = username;

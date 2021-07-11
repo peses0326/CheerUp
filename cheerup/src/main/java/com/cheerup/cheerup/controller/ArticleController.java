@@ -3,6 +3,7 @@ package com.cheerup.cheerup.controller;
 import com.cheerup.cheerup.dto.ArticleRequestDto;
 import com.cheerup.cheerup.model.Article;
 import com.cheerup.cheerup.repository.ArticleRepository;
+import com.cheerup.cheerup.repository.CommentRepository;
 import com.cheerup.cheerup.security.UserDetailsImpl;
 import com.cheerup.cheerup.service.ArticleService;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -18,8 +20,10 @@ public class ArticleController {
     private final ArticleService articleService;
 
     @GetMapping("/article")
-    public List<Article> getArticle() {return articleRepository.findAllByOrderByCreatedAtDesc(); }
-
+    public List<Article> getArticle() {
+        List<Article> articleList = articleRepository.findAllByOrderByCreatedAtDesc();
+        return articleService.commentsCounter(articleList);
+    }
 
     @GetMapping("/article/{id}")
     public Article getArticle(@PathVariable Long id){

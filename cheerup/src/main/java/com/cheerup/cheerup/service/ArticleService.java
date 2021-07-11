@@ -3,18 +3,22 @@ package com.cheerup.cheerup.service;
 import com.cheerup.cheerup.dto.ArticleRequestDto;
 import com.cheerup.cheerup.model.Article;
 import com.cheerup.cheerup.repository.ArticleRepository;
+import com.cheerup.cheerup.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
 public class ArticleService {
 
     private final ArticleRepository articleRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional // 메소드 동작이 SQL 쿼리문임을 선언합니다.
     public Article createArticle(ArticleRequestDto requestDto, String username) {
@@ -27,6 +31,19 @@ public class ArticleService {
     @GetMapping("/article/{id}")
     public Article getArticle(@PathVariable Long id) {
         return articleRepository.findById(id).orElseThrow(
-                ()->new IllegalArgumentException(" "));
+                () -> new IllegalArgumentException(" "));
+    }
+
+    public List<Article> commentsCounter(List<Article> articleList) {
+        for (Article value : articleList) {
+            Optional<Article> articleOptional = Optional.ofNullable(value);
+            if (articleOptional.isPresent()) {
+                Article article = articleOptional.get();
+                Long articleId = article.getId();
+                Long commentsCount = commentRepository.countByArticleId(articleId);
+                article.addCommentsCount(commentsCount);
+            }
+        }
+        return articleList;
     }
 }
