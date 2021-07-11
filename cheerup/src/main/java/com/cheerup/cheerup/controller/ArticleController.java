@@ -18,11 +18,14 @@ public class ArticleController {
     private final ArticleService articleService;
 
     @GetMapping("/article")
-    public List<Article> getArticle() {return articleRepository.findAllByOrderByCreatedAtDesc(); }
-
+    public List<Article> getArticle() {
+        List<Article> articleList = articleRepository.findAllByOrderByCreatedAtDesc();
+        articleService.IpChecker(); // 방문자 체크 로직
+        return articleService.commentsCounter(articleList);
+    }
 
     @GetMapping("/article/{id}")
-    public Article getArticle(@PathVariable Long id){
+    public Article getArticle(@PathVariable Long id) {
         return articleRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당 아이디가 존재하지 않습니다.")
         );
@@ -31,7 +34,7 @@ public class ArticleController {
     @PostMapping("/article")
     public Article createArticle(@RequestBody ArticleRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         // 로그인 되어 있는 ID의 username
-        String username ="";
+        String username = "";
         if (userDetails != null) {
             username = userDetails.getUser().getUsername();
         }

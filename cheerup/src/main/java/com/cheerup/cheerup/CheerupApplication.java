@@ -4,12 +4,17 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.annotation.PostConstruct;
 import java.util.TimeZone;
 
+@EnableScheduling
 @EnableJpaAuditing
 @SpringBootApplication
 public class CheerupApplication {
@@ -35,6 +40,9 @@ public class CheerupApplication {
             }
         };
     }
+
+    @Bean
+    public TaskScheduler taskScheduler() { return new ConcurrentTaskScheduler();}
 }
 
 // 명언 입력기
