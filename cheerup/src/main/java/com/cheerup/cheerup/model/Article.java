@@ -27,25 +27,22 @@ public class Article extends Timestamped {
     @Transient
     private Long commentsCount;
 
+    @Transient
+    private Long likesCount;
+
     public void addCommentsCount(Long count) {
         this.commentsCount = count;}
 
-    public Article(String saying, String username, String content) {
-        this.saying = saying;
-        this.username = username;
-        this.content = content;
-    }
-
-    public Article(ArticleRequestDto requestDto) {
-        this.saying = requestDto.getSaying();
-        this.username = requestDto.getUsername();
-        this.content = requestDto.getContent();
-    }
-
+    public void addLikesCount(Long count) {
+        this.likesCount = count;}
+        
     public Article(ArticleRequestDto requestDto, String username) {
         this.saying = requestDto.getSaying();
         this.username = username;
         this.content = requestDto.getContent();
     }
 
+    public void update(ArticleRequestDto requestDto) {
+        this.content = requestDto.getContent();
+    }
 }

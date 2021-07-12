@@ -1,6 +1,5 @@
 package com.cheerup.cheerup.controller;
 
-
 import com.cheerup.cheerup.dto.CommentRequestDto;
 import com.cheerup.cheerup.model.Comment;
 import com.cheerup.cheerup.repository.CommentRepository;
@@ -25,11 +24,6 @@ public class CommentController {
     @GetMapping("/comment/{articleId}") // 댓글 게시글 ID 별로 조회
     public List<Comment> readComments(@PathVariable Long articleId) {
         return commentRepository.findAllByArticleIdOrderByModifiedAtDesc(articleId);
-    }
-
-    @GetMapping("/commentCounter/{articleId}") // 댓글 갯수 조회
-    public Long readCommentCounter(@PathVariable Long articleId) {
-        return commentRepository.countByArticleId(articleId);
     }
 
     @PostMapping("/comment") // 댓글 생성

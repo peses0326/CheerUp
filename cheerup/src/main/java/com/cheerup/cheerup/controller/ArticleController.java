@@ -19,9 +19,7 @@ public class ArticleController {
 
     @GetMapping("/article")
     public List<Article> getArticle() {
-        List<Article> articleList = articleRepository.findAllByOrderByCreatedAtDesc();
-        articleService.IpChecker(); // 방문자 체크 로직
-        return articleService.commentsCounter(articleList);
+        return articleService.updateCounter();
     }
 
     @GetMapping("/article/{id}")
@@ -39,6 +37,12 @@ public class ArticleController {
             username = userDetails.getUser().getUsername();
         }
         return articleService.createArticle(requestDto, username);
+    }
+
+    @PutMapping("/article/{id}")
+    public Long updateText(@PathVariable Long id, @RequestBody ArticleRequestDto requestDto) {
+        articleService.update(id, requestDto);
+        return id;
     }
 
     @DeleteMapping("/article/{id}")
