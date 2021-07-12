@@ -7,7 +7,6 @@ import com.cheerup.cheerup.repository.ArticleRepository;
 import com.cheerup.cheerup.repository.CommentRepository;
 import com.cheerup.cheerup.repository.IpRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.task.DelegatingSecurityContextAsyncTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -61,10 +60,12 @@ public class ArticleService {
         if (visitorIp == null)
             visitorIp = req.getRemoteAddr();
         Ip ip = new Ip(visitorIp);
-        List<Ip> IpList = ipRepository.findAllByOrderByTotalVisitorsDesc();
-        if (!IpList.contains(ip)) {
+        List<Ip> IpList = ipRepository.findAll();
+        if (IpList.contains(ip)) {
             ipRepository.save(ip);
+            return ip;
+        }else{
+            return ip;
         }
-        return ip;
     }
 }
