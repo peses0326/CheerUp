@@ -7,6 +7,7 @@ import com.cheerup.cheerup.repository.ArticleRepository;
 import com.cheerup.cheerup.repository.CommentRepository;
 import com.cheerup.cheerup.repository.IpRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.task.DelegatingSecurityContextAsyncTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
