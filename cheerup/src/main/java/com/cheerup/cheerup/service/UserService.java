@@ -13,7 +13,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -33,40 +37,53 @@ public class UserService {
         this.authenticationManager = authenticationManager;
     }
 
+    public Map<String, String> validateHandling(Errors errors) {
+        Map<String, String> validatorResult = new HashMap<>();
+
+        for (FieldError error : errors.getFieldErrors()) {
+            String validKeyName = String.format("valid_%s", error.getField());
+            validatorResult.put(validKeyName, error.getDefaultMessage());
+        }
+
+        return validatorResult;
+    }
 
     public String registerUser(SignupRequestDto requestDto) {
-        String error = "";
         String username = requestDto.getUsername();
-        String password = requestDto.getPassword();
-        String password2 = requestDto.getPassword2();
-        UserRole role = UserRole.USER;
+        String errorMessage = "";
         // 회원 ID 중복 확인
         Optional<User> found = userRepository.findByUsername(username);
-
-        String pattern = "^[a-zA-Z0-9]*$";
-
-        if (found.isPresent()) {
-            return "중복된 id입니다.";
+        if (username.equals("null") || username.equals("admin")) {
+            errorMessage = "부적절한 ID입니다.";
+            return errorMessage;
         }
-
-        if (username.length() < 3) {
-            return "닉네임을 3자 이상 입력하세요";
-        } else if (!Pattern.matches(pattern, username)) {
-            return "알파벳 대소문자와 숫자로만 입력하세요";
-        } else if (!password.equals(password2)) {
-            return "비밀번호가 일치하지 않습니다";
-        } else if (password.length() < 3) {
-            return "비밀번호를 3자 이상 입력하세요";
-        } else if (password.contains(username)) {
-            return "비밀번호에 닉네임을 포함할 수 없습니다.";
+        if (found.isPresent()) {
+            errorMessage = "중복된 사용자 ID가 존재합니다.";
+            return errorMessage;
+        }
+        if (requestDto.getPassword().contains(username)) {
+            errorMessage = "PW와 ID에 중복값이 포함되었습니다.";
+            return errorMessage;
+        }
+        if (!requestDto.getPassword().equals(requestDto.getPasswordChecker())) {
+            errorMessage = "PW 확인이 틀렸습니다.";
+            return errorMessage;
         }
         // 패스워드 인코딩
-        password = passwordEncoder.encode(password);
-        requestDto.setPassword(password);
+        String password = passwordEncoder.encode(requestDto.getPassword());
+        // 사용자 ROLE 확인
+        UserRole role = UserRole.USER;
+        if (requestDto.isAdmin()) {
+            if (!requestDto.getAdminToken().equals(ADMIN_TOKEN)) {
+                errorMessage = "관리자 암호가 틀려 등록이 불가능합니다.";
+                return errorMessage;
+            }
+            role = UserRole.ADMIN;
+        }
 
-        User user = new User(username,password,role);
+        User user = new User(username, password, role);
         userRepository.save(user);
-        return error;
+        return errorMessage;
     }
 
     public void kakaoLogin(String authorizedCode) {

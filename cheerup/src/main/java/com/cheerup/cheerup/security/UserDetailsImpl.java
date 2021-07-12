@@ -1,6 +1,7 @@
 package com.cheerup.cheerup.security;
 
 import com.cheerup.cheerup.model.User;
+import com.cheerup.cheerup.model.UserRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -17,6 +18,10 @@ public class UserDetailsImpl implements UserDetails {
 
     public User getUser() {
         return user;
+    }
+
+    public UserRole getRole() {
+        return user.getRole();
     }
 
     @Override
