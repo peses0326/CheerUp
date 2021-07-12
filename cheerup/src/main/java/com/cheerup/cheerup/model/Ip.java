@@ -9,14 +9,18 @@ import javax.persistence.*;
 @Getter
 @Entity
 public class Ip {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
-    private Long totalVisitors;
+    private Long id;
 
-    @Column(nullable = false)
-    private String Ip;
+    @Column(nullable = false, unique = true)
+    private String ipAdress;
 
-    public Ip(String receivedIp){
-        this.Ip = receivedIp;
+    public Ip(String ipAdress){
+        this.ipAdress = ipAdress;
+    }
+
+    public Ip(Ip receivedIp){
+        this.ipAdress = receivedIp.getIpAdress();
     }
 }

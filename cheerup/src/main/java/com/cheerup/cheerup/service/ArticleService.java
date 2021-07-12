@@ -2,7 +2,6 @@ package com.cheerup.cheerup.service;
 
 import com.cheerup.cheerup.dto.ArticleRequestDto;
 import com.cheerup.cheerup.model.Article;
-import com.cheerup.cheerup.model.Ip;
 import com.cheerup.cheerup.repository.ArticleRepository;
 import com.cheerup.cheerup.repository.CommentRepository;
 import com.cheerup.cheerup.repository.IpRepository;
@@ -10,10 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
@@ -53,21 +49,21 @@ public class ArticleService {
         return articleList;
     }
 
-    @Transactional
-    public Ip IpChecker() {
-        HttpServletRequest req = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        String visitorIp = req.getHeader("X-FORWARDED-FOR");
-        if (visitorIp == null)
-            visitorIp = req.getRemoteAddr();
-        Ip ip = new Ip(visitorIp);
-        List<Ip> IpList = ipRepository.findAll();
-        if (IpList.contains(ip)) {
-            ipRepository.save(ip);
-            return ip;
-        }else{
-            return ip;
-        }
-    }
+//    @Transactional
+//    public Ip IpChecker() {
+//        HttpServletRequest req = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+//        String visitorIp = req.getHeader("X-FORWARDED-FOR");
+//        if (visitorIp == null)
+//            visitorIp = req.getRemoteAddr();
+//        Ip ip = new Ip(visitorIp);
+//        List<Ip> IpList = ipRepository.findAll();
+//        if (IpList.contains(ip)) {
+//            ipRepository.save(ip);
+//            return ip;
+//        }else{
+//            return ip;
+//        }
+//    }
     @Transactional
     public void update(Long id, ArticleRequestDto requestDto) {
         Article article = articleRepository.findById(id).orElseThrow(

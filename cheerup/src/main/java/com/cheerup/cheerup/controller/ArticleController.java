@@ -20,7 +20,6 @@ public class ArticleController {
     @GetMapping("/article")
     public List<Article> getArticle() {
         List<Article> articleList = articleRepository.findAllByOrderByCreatedAtDesc();
-        articleService.IpChecker(); // 방문자 체크 로직
         return articleService.commentsCounter(articleList);
     }
 

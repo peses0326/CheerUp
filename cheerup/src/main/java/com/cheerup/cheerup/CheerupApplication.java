@@ -1,5 +1,8 @@
 package com.cheerup.cheerup;
 
+import com.cheerup.cheerup.model.Saying;
+import com.cheerup.cheerup.repository.SayingRepository;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +15,8 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.annotation.PostConstruct;
+import java.util.Arrays;
+import java.util.List;
 import java.util.TimeZone;
 
 @EnableScheduling
@@ -38,18 +43,49 @@ public class CheerupApplication {
                         .allowedOrigins("*")
                         .maxAge(3000)
                         .allowedMethods(
-                        HttpMethod.GET.name(),
-                        HttpMethod.HEAD.name(),
-                        HttpMethod.POST.name(),
-                        HttpMethod.PUT.name(),
-                        HttpMethod.DELETE.name());
+                                HttpMethod.GET.name(),
+                                HttpMethod.HEAD.name(),
+                                HttpMethod.POST.name(),
+                                HttpMethod.PUT.name(),
+                                HttpMethod.DELETE.name());
             }
         };
     }
 
     @Bean
-    public TaskScheduler taskScheduler() { return new ConcurrentTaskScheduler();}
-}
+    public TaskScheduler taskScheduler() {
+        return new ConcurrentTaskScheduler();
+    }
+
+    @Bean
+    public CommandLineRunner demo(SayingRepository repository) {
+        return (args) -> {
+            List<String> sayings = Arrays.asList("이성적으로 판단해라 - 항해팍도사" ,
+                    "감성적으로 바라보지 말아라 - 항해팍도사 " ,
+                    "망설이지 말아라 - 항해팍도사 " ,
+                    "지금 아니면 안된다 - 항해팍도사 " ,
+                    "현실을 정확히 판단하라 - 항해팍도사 " ,
+                    "믿어보자 - 항해팍도사 " ,
+                    "아직 이르다 시작하지 말아라 - 항해팍도사 " ,
+                    "빨리 잊어라 새로운 것이 기다리고 있다 - 항해팍도사 " ,
+                    "한계에 도달했다 - 항해팍도사 " ,
+                    "기쁨으로 다가올 것이다 - 항해팍도사 " ,
+                    "마음을 열고 기다려라 - 항해팍도사 " ,
+                    "누구보다 자기 자신이 더 잘 알것이다 - 항해팍도사 " ,
+                    "신념을 버리지 말고 믿어라 - 항해팍도사 " ,
+                    "관심이 없다 - 항해팍도사 " ,
+                    "기쁜일이 다가온다 기다려라 - 항해팍도사 " ,
+                    "다른 사람의 말에 귀 기울여라 - 항해팍도사 " ,
+                    "좀 더 생각해봐라 - 항해팍도사 " ,
+                    "흔한 것은 최고의 방법이 아니다 - 항해팍도사 " ,
+                    "열린 마음으로 기다려라 - 항해팍도사");
+                    Long num = 103L;
+            for (String saying : sayings) {
+                num++;
+                repository.save(new Saying(num, saying));
+            }
+        };
+    }}
 
 // 명언 입력기
 /*            @Bean
@@ -164,7 +200,7 @@ public class CheerupApplication {
                                     "삶을 사는 데는 단 두가지 방법이 있다 하나는 기적이 전혀 없다고 여기는 것이고 또 다른 하나는 모든 것이 기적이라고 여기는방식이다 – 알베르트 아인슈타인");
                     Long num = 0L;
                     for (String saying:sayings) {
-                        num ++;
+                        num ,,;
                         repository.save(new Saying(num, saying));
                     }
                 };
