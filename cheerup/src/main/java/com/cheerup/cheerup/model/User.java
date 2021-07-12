@@ -1,13 +1,13 @@
 package com.cheerup.cheerup.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
+@Builder
 @Setter
 @Getter // get 함수를 일괄적으로 만들어줍니다.
+@AllArgsConstructor
 @NoArgsConstructor // 기본 생성자를 만들어줍니다.
 @Entity // DB 테이블 역할을 합니다.
 public class User extends Timestamped {
@@ -16,8 +16,7 @@ public class User extends Timestamped {
     @Id
     private Long id;
 
-    // 반드시 값을 가지도록 합니다.
-    @Column(nullable = false)
+    @Column(length = 12, nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false)

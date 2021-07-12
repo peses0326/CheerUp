@@ -1,22 +1,28 @@
 package com.cheerup.cheerup.controller;
 
 import com.cheerup.cheerup.dto.SignupRequestDto;
+import com.cheerup.cheerup.model.User;
+import com.cheerup.cheerup.model.UserRole;
+import com.cheerup.cheerup.repository.UserRepository;
+import com.cheerup.cheerup.security.JwtTokenProvider;
 import com.cheerup.cheerup.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+
+@RequiredArgsConstructor
+@RestController
 public class UserController {
 
     private final UserService userService;
-
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final UserRepository userRepository;
 
     // 회원 로그인 페이지
     @GetMapping("/user/login")
@@ -38,21 +44,17 @@ public class UserController {
 
     // 회원 가입 요청 처리
     @PostMapping("/user/signup")
-    public String registerUser(SignupRequestDto requestDto, Model model) {
-        if (userService.registerUser(requestDto)== ""){
-            userService.registerUser(requestDto);
-            return "login";
-        }else {
-            model.addAttribute("errortext",userService.registerUser(requestDto));
-            return "signup";
-        }
+    public User registerUser(@RequestBody SignupRequestDto requestDto) {
+        return userRepository.save(User.builder()
+                .username(requestDto.getUsername())
+                .password(passwordEncoder.encode(requestDto.getPassword()))
+                .role(UserRole.USER)
+                .build());
     }
 
     @GetMapping("/user/kakao/callback")
-    public String kakaoLogin(String code) {
+    public void kakaoLogin(String code) {
         // authorizedCode: 카카오 서버로부터 받은 인가 코드
         userService.kakaoLogin(code);
-
-        return "redirect:/";
     }
 }
