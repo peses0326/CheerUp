@@ -29,6 +29,7 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.json/json
     implementation group: 'org.json', name: 'json', version: '20210307'
+    // Validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     // 스프링 시큐리티
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -36,6 +37,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     // Thymeleaf 에서 springsecurity 의존성 설정
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+    // 스웨거
+    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+    implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
 }
 
 test {

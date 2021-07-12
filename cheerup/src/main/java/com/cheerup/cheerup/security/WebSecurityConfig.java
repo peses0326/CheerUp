@@ -1,8 +1,11 @@
 package com.cheerup.cheerup.security;
 
 
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -10,13 +13,35 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
-@EnableWebSecurity // 스프링 Security 지원을 가능하게 함
+@EnableWebSecurity
+@Profile("!https")
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean   // 비밀번호 암호화
     public BCryptPasswordEncoder encodePassword() {
         return new BCryptPasswordEncoder();
     }
+
+//    @Override
+//    protected void configure(final HttpSecurity http) throws Exception {
+//        http.csrf().disable().authorizeRequests()
+//                //...
+//                .antMatchers(
+//                        HttpMethod.GET,
+//                        "/index*", "/static/**", "/*.js", "/*.json", "/*.ico", "/v2/api-docs",
+//                        "/configuration/ui", "/swagger-resources", "/configuration/security",
+//                        "**", "/**", "/swagger/**")
+//                .permitAll()
+//                .anyRequest().authenticated()
+//                .and()
+//                .formLogin()
+//                .loginPage("/user/login")
+//                .failureUrl("/")
+//                .defaultSuccessUrl("/")
+//                .permitAll();
+//    }
+
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
@@ -52,5 +77,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/")
                 .permitAll();
     }
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
 }
-
