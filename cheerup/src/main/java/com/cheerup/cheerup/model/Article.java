@@ -47,5 +47,9 @@ public class Article extends Timestamped {
         this.username = username;
         this.content = requestDto.getContent();
     }
-
+    public void update(ArticleRequestDto requestDto) {
+        this.saying = requestDto.getSaying();
+        this.username = requestDto.getUsername();
+        this.content = requestDto.getContent();
+    }
 }

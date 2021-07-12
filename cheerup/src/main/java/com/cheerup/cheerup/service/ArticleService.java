@@ -68,4 +68,11 @@ public class ArticleService {
             return ip;
         }
     }
+    @Transactional
+    public void update(Long id, ArticleRequestDto requestDto) {
+        Article article = articleRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
+        );
+        article.update(requestDto);
+    }
 }

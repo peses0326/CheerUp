@@ -46,4 +46,9 @@ public class ArticleController {
         articleRepository.deleteById(id);
         return id;
     }
+    @PutMapping("/article/{id}")
+    public Long putArticle(@PathVariable Long id, @RequestBody ArticleRequestDto requestDto) {
+        articleService.update(id, requestDto);
+        return id;
+    }
 }
