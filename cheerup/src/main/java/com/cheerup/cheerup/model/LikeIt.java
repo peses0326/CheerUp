@@ -13,7 +13,7 @@ import java.util.Map;
 @Entity
 public class LikeIt {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
 
