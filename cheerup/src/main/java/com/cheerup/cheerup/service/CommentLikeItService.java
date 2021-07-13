@@ -21,10 +21,10 @@ public class CommentLikeItService {
         Optional<CommentLikeIt> commentLikeSize = Optional.ofNullable(commentLikeItRepository.findByUsernameAndCommentId(requestDto.getUsername(), requestDto.getCommentId()));
         if (commentLikeSize.isPresent()) { // 이미 좋아요를 누른 상태
             commentLikeItRepository.deleteByUsernameAndCommentId(requestDto.getUsername(), requestDto.getCommentId());
-            return requestDto.getCommentId() + " likeIt cancelled!";
+            return requestDto.getCommentId() + " commentLikeIt cancelled!";
         } else { // 좋아요를 누르지 않은 상태
             commentLikeItRepository.save(commentLikeIt);
-            return requestDto.getCommentId() + " likeIt!";
+            return requestDto.getCommentId() + " commentLikeIt!";
         }
     }
 }
