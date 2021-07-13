@@ -19,7 +19,6 @@ import org.springframework.validation.FieldError;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 @Service
 public class UserService {

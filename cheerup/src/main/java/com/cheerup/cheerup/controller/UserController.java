@@ -1,12 +1,10 @@
 package com.cheerup.cheerup.controller;
 
 import com.cheerup.cheerup.dto.SignupRequestDto;
-import com.cheerup.cheerup.model.UserRole;
 import com.cheerup.cheerup.security.UserDetailsImpl;
 import com.cheerup.cheerup.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,6 +52,7 @@ public class UserController {
         }
         request.getSession().setAttribute("username", username);
         request.getSession().setAttribute("role", role);
+        request.getSession().setMaxInactiveInterval(360*60);
         session.put("username", String.valueOf(request.getSession().getAttribute("username")));
         session.put("role", String.valueOf(request.getSession().getAttribute("role")));
         return session;

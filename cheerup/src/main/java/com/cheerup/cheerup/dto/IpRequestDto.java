@@ -5,4 +5,5 @@ import lombok.Getter;
 @Getter
 public class IpRequestDto {
     private String Ip;
+
 }
