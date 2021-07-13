@@ -1,82 +1,56 @@
 package com.cheerup.cheerup.security;
 
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
+@AllArgsConstructor
 @EnableWebSecurity
-@Profile("!https")
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Bean   // 비밀번호 암호화
-    public BCryptPasswordEncoder encodePassword() {
-        return new BCryptPasswordEncoder();
+    private final JwtTokenProvider jwtTokenProvider;
+
+    // 암호화에 필요한 PasswordEncoder Bean 등록
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        // return new BCryptPasswordEncoder();
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-//    @Override
-//    protected void configure(final HttpSecurity http) throws Exception {
-//        http.csrf().disable().authorizeRequests()
-//                //...
-//                .antMatchers(
-//                        HttpMethod.GET,
-//                        "/index*", "/static/**", "/*.js", "/*.json", "/*.ico", "/v2/api-docs",
-//                        "/configuration/ui", "/swagger-resources", "/configuration/security",
-//                        "**", "/**", "/swagger/**")
-//                .permitAll()
-//                .anyRequest().authenticated()
-//                .and()
-//                .formLogin()
-//                .loginPage("/user/login")
-//                .failureUrl("/")
-//                .defaultSuccessUrl("/")
-//                .permitAll();
-//    }
-
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
-        http.headers().frameOptions().disable();
-        http.authorizeRequests()
-
-                // image 폴더를 login 없이 허용
-                .antMatchers("/images/**").permitAll()
-                // css 폴더를 login 없이 허용
-                .antMatchers("/css/**").permitAll()
-                .antMatchers("/user/**").permitAll()
-                .antMatchers("/h2-console/**").permitAll()
-                // 메인페이지 접근허용
-                .antMatchers("/index/**").permitAll()
-                // 글 조회 접근허용
-                .antMatchers("/detail.html/**").permitAll()
-                // api 요청 접근허용
-                .antMatchers("/api/**").permitAll()
-                .antMatchers("/").permitAll()
-                .antMatchers("/**").permitAll()
-
-                // 그 외 모든 요청은 인증과정 필요
-                .anyRequest().authenticated()
-                .and()
-                .formLogin()
-                .loginPage("/user/login")
-                .failureUrl("/user/login/error")
-                .defaultSuccessUrl("/")
-                .permitAll()
-                .and()
-                .logout()
-                .logoutUrl("/user/logout")
-                .logoutSuccessUrl("/")
-                .permitAll();
-    }
+    // authenticationManager를 Bean 등록
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        // 필터 등록
+        http
+                .httpBasic().disable() // REST API만을 고려, 기본 설정 해제
+                .csrf().disable() // csrf 사용 X
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                // 토큰 기반 인증이므로 세션도 사용 X
+                .and()
+                .authorizeRequests() // 요청에 대한 사용권한 체크
+                .anyRequest().permitAll() // 나머지 요청은 누구나 접근 가능
+                .and()
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
+                        UsernamePasswordAuthenticationFilter.class);
+        // JwtAuthenticationFilter는
+        // UsernamePasswordAuthenticationFilter 전에 넣음
     }
 }

@@ -3,7 +3,6 @@ package com.cheerup.cheerup.dto;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 
 @Data
 public class SignupRequestDto {
@@ -20,4 +19,7 @@ public class SignupRequestDto {
     private String passwordChecker;
     private boolean admin = false;
     private String adminToken = "";
+
+    public SignupRequestDto(String username, String password, String passwordChecker) {
+    }
 }
