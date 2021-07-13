@@ -9,7 +9,6 @@ import com.cheerup.cheerup.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +29,7 @@ public class UserController {
 
     // 회원 가입 요청 처리
     @PostMapping("/user/signup")
-    public void registerUser(@Valid @RequestBody SignupRequestDto requestDto, Errors errors) {
+    public void registerUser(@Valid @RequestBody SignupRequestDto requestDto) {
         userService.registerUser(requestDto);
     }
 
