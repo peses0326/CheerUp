@@ -47,8 +47,8 @@ public class UserService {
         Optional<User> found = userRepository.findByUsername(username);
         if (username.equals("") || password.equals("") || passwordChecker.equals("")) {
             throw new IllegalArgumentException("username || password || passwordChecker가 비어있습니다.");
-        } else if (password.length() < 8) {
-            throw new IllegalArgumentException("password는 최소 9글자입니다.");
+        } else if (password.length() < 4) {
+            throw new IllegalArgumentException("password는 최소 4글자입니다.");
         } else if (!password.equals(passwordChecker)) {
             throw new IllegalArgumentException("password와 passwordChecker가 다릅니다.");
         } else if (found.isPresent()) {
