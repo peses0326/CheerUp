@@ -44,8 +44,7 @@ public class ArticleService {
                 () -> new IllegalArgumentException(" "));
     }
 
-    public List<Article> updateCounter() {
-        List<Article> articleList = articleRepository.findAllByOrderByCreatedAtDesc();
+    public List<Article> updateCounter(List<Article> articleList) {
         return (likesCounter(commentsCounter(articleList)));
     }
 

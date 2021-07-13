@@ -18,12 +18,13 @@ public class CommentController {
 
     @GetMapping("/comment") // 댓글 전체 조회
     public List<Comment> readComment() {
-        return commentRepository.findAllByOrderByModifiedAtDesc();
+        return commentService.commentLikesCounter(commentRepository.findAllByOrderByCreatedAtDesc());
     }
 
     @GetMapping("/comment/{articleId}") // 댓글 게시글 ID 별로 조회
     public List<Comment> readComments(@PathVariable Long articleId) {
-        return commentRepository.findAllByArticleIdOrderByModifiedAtDesc(articleId);
+        List<Comment> commentList = commentRepository.findAllByArticleIdOrderByModifiedAtDesc(articleId).orElseThrow(() -> new IllegalArgumentException("해당 articleId가 존재하지 않습니다."));
+        return commentService.commentLikesCounter(commentList);
     }
 
     @PostMapping("/comment") // 댓글 생성

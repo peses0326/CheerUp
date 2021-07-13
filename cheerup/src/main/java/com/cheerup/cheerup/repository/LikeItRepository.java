@@ -8,6 +8,6 @@ import java.util.List;
 public interface LikeItRepository extends JpaRepository<LikeIt, Long> {
     List<LikeIt> findAllByArticleId(Long articleId);
     Long countByArticleId(Long articleId);
-    void deleteByUsernameAndArticleId(String userName, Long articleId);
-    LikeIt findByUsernameAndArticleId(String userName, Long articleId);
+    void deleteByUsernameAndArticleId(String username, Long articleId);
+    LikeIt findByUsernameAndArticleId(String username, Long articleId);
 }

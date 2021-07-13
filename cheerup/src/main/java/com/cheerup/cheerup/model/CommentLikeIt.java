@@ -1,6 +1,6 @@
 package com.cheerup.cheerup.model;
 
-import com.cheerup.cheerup.dto.LikeItRequestDto;
+import com.cheerup.cheerup.dto.CommentLikeItRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @Entity
-public class LikeIt {
+public class CommentLikeIt {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -19,10 +19,10 @@ public class LikeIt {
     private String username;
 
     @Column(nullable = false)
-    private Long articleId;
+    private Long commentId;
 
-    public LikeIt(LikeItRequestDto requestDto) {
+    public CommentLikeIt(CommentLikeItRequestDto requestDto) {
         this.username = requestDto.getUsername();
-        this.articleId = requestDto.getArticleId();
+        this.commentId = requestDto.getCommentId();
     }
 }

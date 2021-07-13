@@ -19,14 +19,14 @@ public class ArticleController {
 
     @GetMapping("/article")
     public List<Article> getArticle() {
-        return articleService.updateCounter();
+        List<Article> articleList = articleRepository.findAllByOrderByCreatedAtDesc();
+        return articleService.updateCounter(articleList);
     }
 
     @GetMapping("/article/{id}")
-    public Article getArticle(@PathVariable Long id) {
-        return articleRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("해당 아이디가 존재하지 않습니다.")
-        );
+    public List<Article> getArticle(@PathVariable Long id) {
+        List<Article> articleList = articleRepository.findAllById(id).orElseThrow(() -> new IllegalArgumentException("해당 Id가 존재하지 않습니다."));
+        return articleService.updateCounter(articleList);
     }
 
     @PostMapping("/article")
