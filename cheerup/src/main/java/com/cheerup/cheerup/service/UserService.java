@@ -4,18 +4,20 @@ import com.cheerup.cheerup.dto.SignupRequestDto;
 import com.cheerup.cheerup.model.User;
 import com.cheerup.cheerup.model.UserRole;
 import com.cheerup.cheerup.repository.UserRepository;
+import com.cheerup.cheerup.security.UserDetailsImpl;
 import com.cheerup.cheerup.security.kakao.KakaoOAuth2;
 import com.cheerup.cheerup.security.kakao.KakaoUserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -36,53 +38,26 @@ public class UserService {
         this.authenticationManager = authenticationManager;
     }
 
-    public Map<String, String> validateHandling(Errors errors) {
-        Map<String, String> validatorResult = new HashMap<>();
-
-        for (FieldError error : errors.getFieldErrors()) {
-            String validKeyName = String.format("valid_%s", error.getField());
-            validatorResult.put(validKeyName, error.getDefaultMessage());
-        }
-
-        return validatorResult;
-    }
-
-    public String registerUser(SignupRequestDto requestDto) {
+    @Transactional
+    public void registerUser(SignupRequestDto requestDto) {
         String username = requestDto.getUsername();
-        String errorMessage = "";
-        // 회원 ID 중복 확인
-        Optional<User> found = userRepository.findByUsername(username);
-        if (username.equals("null") || username.equals("admin")) {
-            errorMessage = "부적절한 ID입니다.";
-            return errorMessage;
-        }
-        if (found.isPresent()) {
-            errorMessage = "중복된 사용자 ID가 존재합니다.";
-            return errorMessage;
-        }
-        if (requestDto.getPassword().contains(username)) {
-            errorMessage = "PW와 ID에 중복값이 포함되었습니다.";
-            return errorMessage;
-        }
-        if (!requestDto.getPassword().equals(requestDto.getPasswordChecker())) {
-            errorMessage = "PW 확인이 틀렸습니다.";
-            return errorMessage;
-        }
-        // 패스워드 인코딩
-        String password = passwordEncoder.encode(requestDto.getPassword());
-        // 사용자 ROLE 확인
-        UserRole role = UserRole.USER;
-        if (requestDto.isAdmin()) {
-            if (!requestDto.getAdminToken().equals(ADMIN_TOKEN)) {
-                errorMessage = "관리자 암호가 틀려 등록이 불가능합니다.";
-                return errorMessage;
-            }
-            role = UserRole.ADMIN;
-        }
+        String password = requestDto.getPassword();
+        String passwordChecker = requestDto.getPasswordChecker();
 
+        Optional<User> found = userRepository.findByUsername(username);
+        if (username.equals("") || password.equals("") || passwordChecker.equals("")) {
+            throw new IllegalArgumentException("username || password || passwordChecker가 비어있습니다.");
+        } else if (password.length() < 8) {
+            throw new IllegalArgumentException("password는 최소 9글자입니다.");
+        } else if (!password.equals(passwordChecker)) {
+            throw new IllegalArgumentException("password와 passwordChecker가 다릅니다.");
+        } else if (found.isPresent()) {
+            throw new IllegalArgumentException("중복된 사용자 ID가 존재합니다.");
+        }
+        password = passwordEncoder.encode(requestDto.getPassword());
+        UserRole role = UserRole.USER;
         User user = new User(username, password, role);
         userRepository.save(user);
-        return errorMessage;
     }
 
     public void kakaoLogin(String authorizedCode) {
@@ -90,7 +65,6 @@ public class UserService {
         KakaoUserInfo userInfo = kakaoOAuth2.getUserInfo(authorizedCode);
         Long kakaoId = userInfo.getId();
         String nickname = userInfo.getNickname();
-
 
         // 우리 DB 에서 회원 Id 와 패스워드
         // 회원 Id = 카카오 nickname
@@ -117,5 +91,22 @@ public class UserService {
         Authentication kakaoUsernamePassword = new UsernamePasswordAuthenticationToken(username, password);
         Authentication authentication = authenticationManager.authenticate(kakaoUsernamePassword);
         SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
+    public Map<String, String> userSession(HttpServletRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Map<String, String> session = new HashMap<>();
+        String username = "null";
+        String role = "null";
+        Optional<UserDetailsImpl> userDetailsOptional = Optional.ofNullable(userDetails);
+        if (userDetailsOptional.isPresent()) {
+            username = userDetails.getUsername();
+            role = String.valueOf(userDetails.getRole());
+        }
+        request.getSession().setAttribute("username", username);
+        request.getSession().setAttribute("role", role);
+        request.getSession().setMaxInactiveInterval(360 * 60);
+        session.put("username", String.valueOf(request.getSession().getAttribute("username")));
+        session.put("role", String.valueOf(request.getSession().getAttribute("role")));
+        return session;
     }
 }

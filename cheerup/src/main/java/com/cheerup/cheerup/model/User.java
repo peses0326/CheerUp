@@ -14,7 +14,7 @@ public class User extends Timestamped {
     @Id
     private Long id;
 
-    @Column(length = 12, nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false)
