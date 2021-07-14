@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -32,7 +33,7 @@ public class LikeItController {
     }
 
     @PostMapping("/likeIt") // 좋아요!
-    public String clickLike(@RequestBody LikeItRequestDto requestDto) {
+    public Map<String, Object> clickLike(@RequestBody LikeItRequestDto requestDto) {
         return likeItService.iLikeIt(requestDto);
     }
 }

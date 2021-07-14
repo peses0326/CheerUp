@@ -15,8 +15,6 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.annotation.PostConstruct;
-import java.util.Arrays;
-import java.util.List;
 import java.util.TimeZone;
 
 @EnableScheduling
