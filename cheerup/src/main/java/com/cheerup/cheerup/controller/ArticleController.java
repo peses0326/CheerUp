@@ -25,13 +25,13 @@ public class ArticleController {
         return articleService.updateCounter(articleList);
     }
 
-    @GetMapping("/article/page") // Get 방식 댓글 전체 조회
+    @GetMapping("/article/page") // Get 방식 게시글 전체 조회
     public Page<Article> readPagedAritclesByGetMapping(@RequestParam("page") int page, @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         return articleService.pagedUpdateCounter(articleRepository.findAllByOrderByCreatedAtDesc(pageable));
     }
 
-    @PostMapping("/article/page") // Post 방식 댓글 전체 조회
+    @PostMapping("/article/page") // Post 방식 게시글 전체 조회
     public Page<Article> readPagedArticlesByPostMapping(@RequestBody CommentPageRequestDto requestDto) {
         Pageable pageable = PageRequest.of(requestDto.getPage() - 1, requestDto.getSize());
         return articleService.pagedUpdateCounter(articleRepository.findAllByOrderByCreatedAtDesc(pageable));
