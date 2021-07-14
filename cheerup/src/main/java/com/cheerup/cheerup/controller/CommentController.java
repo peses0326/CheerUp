@@ -1,10 +1,14 @@
 package com.cheerup.cheerup.controller;
 
+import com.cheerup.cheerup.dto.CommentPageRequestDto;
 import com.cheerup.cheerup.dto.CommentRequestDto;
 import com.cheerup.cheerup.model.Comment;
 import com.cheerup.cheerup.repository.CommentRepository;
 import com.cheerup.cheerup.service.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,8 +21,20 @@ public class CommentController {
     private final CommentService commentService; // 업데이트용
 
     @GetMapping("/comment") // 댓글 전체 조회
-    public List<Comment> readComment() {
-        return commentService.commentLikesCounter(commentRepository.findAllByOrderByCreatedAtDesc());
+    public List<Comment> readComments() {
+        return commentService.commentLikesCounter(commentRepository.findAllByOrderByIdDesc());
+    }
+
+    @GetMapping("/comment/page") // Get 방식 댓글 전체 조회
+    public Page<Comment> readPagedCommentsByGetMapping(@RequestParam("page") int page, @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return commentService.pagedCommentLikesCounter(commentRepository.findAllByOrderByCreatedAtDesc(pageable));
+    }
+
+    @PostMapping("/comment/page") // Post 방식 댓글 전체 조회
+    public Page<Comment> readPagedCommentsByPostMapping(@RequestBody CommentPageRequestDto requestDto) {
+        Pageable pageable = PageRequest.of(requestDto.getPage() - 1, requestDto.getSize());
+        return commentService.pagedCommentLikesCounter(commentRepository.findAllByOrderByCreatedAtDesc(pageable));
     }
 
     @GetMapping("/comment/{articleId}") // 댓글 게시글 ID 별로 조회

@@ -5,6 +5,7 @@ import com.cheerup.cheerup.model.Comment;
 import com.cheerup.cheerup.repository.CommentLikeItRepository;
 import com.cheerup.cheerup.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +28,16 @@ public class CommentService {
     }
 
 
-    public List<Comment> commentLikesCounter(List<Comment> commentList) {
+    public List<Comment> commentLikesCounter(List<Comment> commentList) { // 레거시 코드
+        for (Comment value : commentList) {
+            Long commentId = value.getId();
+            Long likesCount = commentLikeItRepository.countByCommentId(commentId);
+            value.addCommentLikesCount(likesCount);
+        }
+        return commentList;
+    }
+
+    public Page<Comment> pagedCommentLikesCounter(Page<Comment> commentList) { // 페이징 코드
         for (Comment value : commentList) {
             Long commentId = value.getId();
             Long likesCount = commentLikeItRepository.countByCommentId(commentId);

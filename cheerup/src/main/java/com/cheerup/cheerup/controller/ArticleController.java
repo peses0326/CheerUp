@@ -1,12 +1,14 @@
 package com.cheerup.cheerup.controller;
 
 import com.cheerup.cheerup.dto.ArticleRequestDto;
+import com.cheerup.cheerup.dto.CommentPageRequestDto;
 import com.cheerup.cheerup.model.Article;
 import com.cheerup.cheerup.repository.ArticleRepository;
-import com.cheerup.cheerup.security.UserDetailsImpl;
 import com.cheerup.cheerup.service.ArticleService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,8 +21,20 @@ public class ArticleController {
 
     @GetMapping("/article")
     public List<Article> getArticle() {
-        List<Article> articleList = articleRepository.findAllByOrderByCreatedAtDesc();
+        List<Article> articleList = articleRepository.findAllByOrderByIdDesc();
         return articleService.updateCounter(articleList);
+    }
+
+    @GetMapping("/article/page") // Get 방식 댓글 전체 조회
+    public Page<Article> readPagedAritclesByGetMapping(@RequestParam("page") int page, @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return articleService.pagedUpdateCounter(articleRepository.findAllByOrderByCreatedAtDesc(pageable));
+    }
+
+    @PostMapping("/article/page") // Post 방식 댓글 전체 조회
+    public Page<Article> readPagedArticlesByPostMapping(@RequestBody CommentPageRequestDto requestDto) {
+        Pageable pageable = PageRequest.of(requestDto.getPage() - 1, requestDto.getSize());
+        return articleService.pagedUpdateCounter(articleRepository.findAllByOrderByCreatedAtDesc(pageable));
     }
 
     @GetMapping("/article/{id}")
