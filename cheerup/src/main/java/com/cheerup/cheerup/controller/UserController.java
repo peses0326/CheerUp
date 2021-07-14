@@ -4,19 +4,15 @@ import com.cheerup.cheerup.dto.SignupRequestDto;
 import com.cheerup.cheerup.model.User;
 import com.cheerup.cheerup.repository.UserRepository;
 import com.cheerup.cheerup.security.JwtTokenProvider;
-import com.cheerup.cheerup.security.UserDetailsImpl;
 import com.cheerup.cheerup.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -33,10 +29,10 @@ public class UserController {
         userService.registerUser(requestDto);
     }
 
-    @GetMapping("/user/session")
-    public Map<String, String> signup(HttpServletRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return userService.userSession(request, userDetails);
-    }
+//    @GetMapping("/user/session")
+//    public Map<String, String> signup(HttpServletRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+//        return userService.userSession(request, userDetails);
+//    }
 
     @GetMapping("/user/kakao/callback")
     public void kakaoLogin(String code) {

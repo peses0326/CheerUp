@@ -8,15 +8,15 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Entity
-public class Ip extends Timestamped {
+public class Visitors {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     private Long id;
 
     @Column(nullable = false)
-    private String ipAddress;
+    private Long totalVisitors;
 
-    public Ip(String ipAddress) {
-        this.ipAddress = ipAddress;
+    public Visitors(long totalVisitors) {
+        this.totalVisitors = totalVisitors;
     }
 }

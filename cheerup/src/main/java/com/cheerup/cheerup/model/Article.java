@@ -30,6 +30,9 @@ public class Article extends Timestamped {
     @Transient
     private Long likesCount;
 
+    @Transient
+    private Boolean userLikeItOrNot;
+
     public void addCommentsCount(Long count) {
         this.commentsCount = count;}
 
