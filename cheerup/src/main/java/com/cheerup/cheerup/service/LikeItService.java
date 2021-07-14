@@ -26,12 +26,13 @@ public class LikeItService {
             likeItRepository.deleteByUsernameAndArticleId(requestDto.getUsername(), requestDto.getArticleId());
             likeItMap.put("articleId", requestDto.getArticleId());
             likeItMap.put("likeIt", false);
-            return likeItMap;
         } else { // 좋아요를 누르지 않은 상태
             likeItRepository.save(likeIt);
             likeItMap.put("articleId", requestDto.getArticleId());
             likeItMap.put("likeIt", true);
-            return likeItMap;
         }
+        return likeItMap;
     }
 }
+
+

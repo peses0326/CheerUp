@@ -2,6 +2,7 @@ package com.cheerup.cheerup.service;
 
 import com.cheerup.cheerup.dto.ArticleRequestDto;
 import com.cheerup.cheerup.model.Article;
+import com.cheerup.cheerup.model.LikeIt;
 import com.cheerup.cheerup.repository.ArticleRepository;
 import com.cheerup.cheerup.repository.CommentRepository;
 import com.cheerup.cheerup.repository.LikeItRepository;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -46,8 +48,21 @@ public class ArticleService {
     }
 
     // 레거시 코드
+    public List<Article> likeItBoolean(List<Article> articleList, String username) {
+        for (Article value : articleList) {
+            Long articleId = value.getId();
+            Optional<LikeIt> didUsernameLikeIt = Optional.ofNullable(likeItRepository.findByUsernameAndArticleId(username, articleId));
+            if (didUsernameLikeIt.isPresent()) {
+                value.changeLikeItChecker(true);
+            } else {
+                value.changeLikeItChecker(false);
+            }
+        }
+        return articleList;
+    }
+
     public List<Article> updateCounter(List<Article> articleList) {
-        return (likesCounter(commentsCounter(articleList)));
+        return likesCounter(commentsCounter(articleList));
     }
 
     public List<Article> commentsCounter(List<Article> articleList) {

@@ -20,9 +20,9 @@ public class ArticleController {
     private final ArticleService articleService;
 
     @GetMapping("/article")
-    public List<Article> getArticle() {
+    public List<Article> getArticle(@RequestParam("username") String username) {
         List<Article> articleList = articleRepository.findAllByOrderByIdDesc();
-        return articleService.updateCounter(articleList);
+        return articleService.likeItBoolean(articleService.updateCounter(articleList), username);
     }
 
     @GetMapping("/article/page") // Get 방식 게시글 전체 조회
