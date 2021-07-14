@@ -51,6 +51,10 @@ public class ArticleService {
     public List<Article> likeItBoolean(List<Article> articleList, String username) {
         for (Article value : articleList) {
             Long articleId = value.getId();
+            Long commentsCount = commentRepository.countByArticleId(articleId);
+            Long likesCount = likeItRepository.countByArticleId(articleId);
+            value.addCommentsCount(commentsCount);
+            value.addLikesCount(likesCount);
             Optional<LikeIt> didUsernameLikeIt = Optional.ofNullable(likeItRepository.findByUsernameAndArticleId(username, articleId));
             if (didUsernameLikeIt.isPresent()) {
                 value.changeLikeItChecker(true);
