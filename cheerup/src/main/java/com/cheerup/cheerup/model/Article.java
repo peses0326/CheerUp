@@ -31,14 +31,17 @@ public class Article extends Timestamped {
     private Long likesCount;
 
     @Transient
-    private Boolean userLikeItOrNot;
+    private Boolean likeItChecker;
 
     public void addCommentsCount(Long count) {
         this.commentsCount = count;}
 
     public void addLikesCount(Long count) {
         this.likesCount = count;}
-        
+
+    public void changeLikeItChecker(Boolean trueOrFalse) {
+        this.likeItChecker = trueOrFalse;}
+
     public Article(ArticleRequestDto requestDto) {
         this.saying = requestDto.getSaying();
         this.username = requestDto.getUsername();
