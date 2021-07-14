@@ -6,6 +6,7 @@ import com.cheerup.cheerup.repository.ArticleRepository;
 import com.cheerup.cheerup.repository.CommentRepository;
 import com.cheerup.cheerup.repository.LikeItRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,6 +45,7 @@ public class ArticleService {
                 () -> new IllegalArgumentException(" "));
     }
 
+    // 레거시 코드
     public List<Article> updateCounter(List<Article> articleList) {
         return (likesCounter(commentsCounter(articleList)));
     }
@@ -58,6 +60,29 @@ public class ArticleService {
     }
 
     public List<Article> likesCounter(List<Article> articleList) {
+        for (Article value : articleList) {
+            Long articleId = value.getId();
+            Long likesCount = likeItRepository.countByArticleId(articleId);
+            value.addLikesCount(likesCount);
+        }
+        return articleList;
+    }
+
+    // 페이징 코드
+    public Page<Article> pagedUpdateCounter(Page<Article> articleList) {
+        return (pagedLikesCounter(pagedCommentsCounter(articleList)));
+    }
+
+    public Page<Article> pagedCommentsCounter(Page<Article> articleList) {
+        for (Article value : articleList) {
+            Long articleId = value.getId();
+            Long commentsCount = commentRepository.countByArticleId(articleId);
+            value.addCommentsCount(commentsCount);
+        }
+        return articleList;
+    }
+
+    public Page<Article> pagedLikesCounter(Page<Article> articleList) {
         for (Article value : articleList) {
             Long articleId = value.getId();
             Long likesCount = likeItRepository.countByArticleId(articleId);
