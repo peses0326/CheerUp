@@ -22,9 +22,9 @@ public class ArticleService {
     private final LikeItRepository likeItRepository;
 
     @Transactional // 메소드 동작이 SQL 쿼리문임을 선언합니다.
-    public Article createArticle(ArticleRequestDto requestDto, String username) {
+    public Article createArticle(ArticleRequestDto requestDto) {
         // 요청받은 DTO 로 DB에 저장할 객체 만들기
-        Article article = new Article(requestDto, username);
+        Article article = new Article(requestDto);
         articleRepository.save(article);
         return article;
     }

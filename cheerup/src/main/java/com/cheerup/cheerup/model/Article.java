@@ -36,9 +36,9 @@ public class Article extends Timestamped {
     public void addLikesCount(Long count) {
         this.likesCount = count;}
         
-    public Article(ArticleRequestDto requestDto, String username) {
+    public Article(ArticleRequestDto requestDto) {
         this.saying = requestDto.getSaying();
-        this.username = username;
+        this.username = requestDto.getUsername();
         this.content = requestDto.getContent();
     }
 

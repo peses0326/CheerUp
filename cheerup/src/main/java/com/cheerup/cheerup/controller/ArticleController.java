@@ -30,13 +30,8 @@ public class ArticleController {
     }
 
     @PostMapping("/article")
-    public Article createArticle(@RequestBody ArticleRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        // 로그인 되어 있는 ID의 username
-        String username = "";
-        if (userDetails != null) {
-            username = userDetails.getUser().getUsername();
-        }
-        return articleService.createArticle(requestDto, username);
+    public Article createArticle(@RequestBody ArticleRequestDto requestDto) {
+        return articleService.createArticle(requestDto);
     }
 
     @PutMapping("/article/{id}")
