@@ -1,5 +1,6 @@
 package com.cheerup.cheerup.model;
 
+import com.cheerup.cheerup.dto.ArticleRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +18,10 @@ public class Visitors {
     private Long totalVisitors;
 
     public Visitors(long totalVisitors) {
+        this.totalVisitors = totalVisitors;
+    }
+
+    public void updateTotalVisitors(Long totalVisitors) {
         this.totalVisitors = totalVisitors;
     }
 }
