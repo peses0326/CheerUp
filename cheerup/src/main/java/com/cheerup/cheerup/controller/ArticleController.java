@@ -20,7 +20,7 @@ public class ArticleController {
     private final ArticleService articleService;
 
     @GetMapping("/article")
-    public List<Article> getArticle(@RequestParam("username") String username) {
+    public List<Article> getArticle(@RequestParam(value = "username", required = false, defaultValue = "") String username) {
         List<Article> articleList = articleRepository.findAllByOrderByIdDesc();
         return articleService.likeItBoolean(articleList, username);
     }
