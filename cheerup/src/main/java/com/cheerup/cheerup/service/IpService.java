@@ -21,7 +21,7 @@ public class IpService {
     private final IpRepository ipRepository;
     private final VisitorsRepository visitorsRepository;
 
-    @Transactional // 메소드 동작이 SQL 쿼리문임을 선언합니다.
+    @Transactional
     public void createIp() {
         HttpServletRequest req = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         String visitorIp = req.getHeader("X-FORWARDED-FOR");
@@ -33,15 +33,15 @@ public class IpService {
         if (!foundIp.isPresent()) {
             Ip ip = new Ip(visitorIp);
             ipRepository.save(ip);
+
             List<Visitors> visitorsList = visitorsRepository.findAll();
             if (visitorsList.isEmpty()) {
                 Visitors visitors = new Visitors(1L);
                 visitorsRepository.save(visitors);
             } else {
                 Long tempTotalVisitors = visitorsList.get(0).getTotalVisitors();
-                Visitors visitors = new Visitors(tempTotalVisitors + 1);
-                visitorsRepository.deleteAll();
-                visitorsRepository.save(visitors);
+                Visitors visitors = visitorsRepository.findAll().get(0);
+                visitors.updateTotalVisitors(tempTotalVisitors + 1);
             }
         } else {
             System.out.println("throw new RuntimeException(\"이미 접속한 유저입니다.\")");
