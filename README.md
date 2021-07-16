@@ -62,7 +62,6 @@ MySql
 | 로그인                          | POST   | /user/login                |
 | 로그아웃                        | GET    | /user/logout               |
 | 회원가입                        | POST   | /user/signup               |
-| 카카오 로그인                   | GET    | /user/kakao/callback       |
 | 좋아요 전체 조회                | GET    | /likeIt                    |
 | 게시글 Id 별 좋아요 조회        | GET    | /likeIt/{articleId}        |
 | 좋아요 총 개수                  | GET    | /likeItCounter             |
