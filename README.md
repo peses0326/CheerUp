@@ -28,7 +28,7 @@
     - 로그인 시 JWT, 쿠키 사용
 
 
-## **🎈 개발 환경  **
+## 🎈 개발 환경 
     - 프론트: AWS S3
     - 백엔드: AWS EC2
     - DB : AWS RDS
@@ -46,28 +46,30 @@ Security
 Jpa  
 MySql  
 
-📃 API 설계
-| 페이지                 | URI                        | 기능                            | method | 요청                                                         | 응답                                                         |
-| ---------------------- | -------------------------- | ------------------------------- | ------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| 메인                   | /saying                    | 명언 랜덤 가져오기              | GET    |                                                              | { "saying":"명언" }                                          |
-| 메인                   | /article                   | 게시글 글쓰기                   | POST   | {     "username": "임꺽정",     "content": "내용",     "saying": "명언" } |                                                              |
-| 게시판                 | /article                   | 게시글 가져오기                 | GET    |                                                              | {    "articles": [     {     "id": "123",     "username": "park",     "content": "내용",     "saying": "명언",     "commentsCount": 5     "createdAt": "12:33"      },      { ...}     ] } |
-| 게시판                 | /article/{id}              | 게시글 삭제                     | DELETE |                                                              |                                                              |
-| 게시판 ㅡ> 게시글 내부 | /article/{id}              | 특정 게시글 가져오기            | GET    |                                                              | {     "id": "123"     "username": "임꺽정",     "content": "내용",     "saying": "명언"     "createdAt": "12:33" } |
-| 게시글 내부            | /comment/{articleId}       | 댓글 가져오기                   | GET    |                                                              | {    "comments": [     {     "_id": "124"     "username": "임꺽정",     "comment": "댓글",     "createdAt": "12:33"      },      { ...}     ] } |
-| 게시글 내부            | /comment                   | 댓글 쓰기                       | POST   | {     "username": "임꺽정",     "comment": "댓글"     "articleId": "articleId" } |                                                              |
-| 게시글 내부            | /comment/{id}              | 댓글 수정                       | PUT    | {     "username": "임꺽정",     "comment": "수정댓글"     "articleId": "articleId" } |                                                              |
-| 게시글 내부            | /comment/{id}              | 댓글 삭제                       | DELETE |                                                              |                                                              |
-| 로그인                 | /user/login                | 로그인                          | POST   | {     "username": "testID",     "password": "pAssword7@" }   | JWT토큰                                                      |
-| 로그아웃               | /user/logout               | 로그아웃                        | GET    |                                                              |                                                              |
-| 회원가입               | /user/signup               | 회원가입                        | POST   | {     "username": "testID",     "password": "pAssword7@",     "passwordChecker": "pAssword7@" } username 과 일치하는 password는 불가함 password 는 대,소문자,숫자,특수문자를 포함 |                                                              |
-| 카카오                 | /user/kakao/callback       | 카카오 로그인                   | GET    |                                                              |                                                              |
-| 게시글 좋아요          | /likeIt                    | 좋아요 전체 조회                | GET    |                                                              |                                                              |
-| 게시글 좋아요          | /likeIt/{articleId}        | 게시글 Id 별 좋아요 조회        | GET    |                                                              |                                                              |
-| 게시글 좋아요          | /likeItCounter             | 좋아요 총 개수                  | GET    |                                                              |                                                              |
-| 게시글 좋아요          | /likeIt                    | 좋아요 입력, 취소               | POST   | { "username" : "이순신",    "articleId" :125  }              | Id likeIt / likeIt cancelled                                 |
-| 댓글 좋아요            | /commentLikeIt             | (댓글 좋아요 전체 조회)         | GET    |                                                              | { "_id" : "125",    "username" : "장보고",    "commentId" : "231"  }... |
-| 댓글 좋아요            | /commentLikeIt/{commentId} | (댓글 ID 별로 댓글 좋아요 조회) | GET    |                                                              | {"username":"임꺽정", "commentId":"24", }...                 |
-| 댓글 좋아요            | /commentLikeItCounter      | (댓글 좋아요 총개수 조회)       | GET    |                                                              | 22                                                           |
-| 댓글 좋아요            | /commentLikeIt             | ( 댓글 좋아요 입력, 취소)       | POST   | {"username":"임꺽정",  "commentId":"24",  }                  | {id commentLikeIt! id commentLikeIt cancelled!}              |
+## 📃 API 설계
+
+| 기능                            | method | URI                        |
+| ------------------------------- | ------ | -------------------------- |
+| 명언 랜덤 가져오기              | GET    | /saying                    |
+| 게시글 글쓰기                   | POST   | /article                   |
+| 게시글 가져오기                 | GET    | /article                   |
+| 게시글 삭제                     | DELETE | /article/{id}              |
+| 특정 게시글 가져오기            | GET    | /article/{id}              |
+| 댓글 가져오기                   | GET    | /comment/{articleId}       |
+| 댓글 쓰기                       | POST   | /comment                   |
+| 댓글 수정                       | PUT    | /comment/{id}              |
+| 댓글 삭제                       | DELETE | /comment/{id}              |
+| 로그인                          | POST   | /user/login                |
+| 로그아웃                        | GET    | /user/logout               |
+| 회원가입                        | POST   | /user/signup               |
+| 카카오 로그인                   | GET    | /user/kakao/callback       |
+| 좋아요 전체 조회                | GET    | /likeIt                    |
+| 게시글 Id 별 좋아요 조회        | GET    | /likeIt/{articleId}        |
+| 좋아요 총 개수                  | GET    | /likeItCounter             |
+| 좋아요 입력, 취소               | POST   | /likeIt                    |
+| (댓글 좋아요 전체 조회)         | GET    | /commentLikeIt             |
+| (댓글 ID 별로 댓글 좋아요 조회) | GET    | /commentLikeIt/{commentId} |
+| (댓글 좋아요 총개수 조회)       | GET    | /commentLikeItCounter      |
+| ( 댓글 좋아요 입력, 취소)       | POST   | /commentLikeIt             |
+
 
