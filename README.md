@@ -1,5 +1,5 @@
 # **cheerup-BE**
-
+- 서비스 주소 : http://spartacheerup.s3-website.ap-northeast-2.amazonaws.com/
 ## **📕 개요**
 
 - 명칭 : cheerup
@@ -13,7 +13,8 @@
     - JWT를 이용한 로그인
 - 스택 : react/spring
 - 형상 관리 툴 : git
-- 협업 툴 : [notion](https://www.notion.so/22-1fc891afa24f457aac4aac2cb320a79f)
+- 협업 툴 : https://www.notion.so/22-1fc891afa24f457aac4aac2cb320a79f
+- 프론트 github : https://github.com/uvula6921/cheerup-FE
 - 간단 소개 : 리액트 - 스프링 게시판 기능을 통한 고민해결 사이트.
 
 ## **☝🏻 프로젝트 특징**
